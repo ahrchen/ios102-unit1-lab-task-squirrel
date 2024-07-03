@@ -160,7 +160,20 @@ extension TaskDetailViewController {
 
 extension TaskDetailViewController: PHPickerViewControllerDelegate {
     func picker(_ picker: PHPickerViewController, didFinishPicking results: [PHPickerResult]) {
-        // This is where we'll get the picked image in the next step...
+        // Dismiss the picker
+        picker.dismiss(animated: true)
+
+        // Get the selected image asset (we can grab the 1st item in the array since we only allowed a selection limit of 1)
+        let result = results.first
+
+        // Get image location
+        // PHAsset contains metadata about an image or video (ex. location, size, etc.)
+        guard let assetId = result?.assetIdentifier,
+              let location = PHAsset.fetchAssets(withLocalIdentifiers: [assetId], options: nil).firstObject?.location else {
+            return
+        }
+
+        print("📍 Image location coordinate: \(location.coordinate)")
     }
 
 }
